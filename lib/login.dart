@@ -1,120 +1,8 @@
 import 'package:flutter/material.dart';
-import 'dart:math';
 import 'api_service.dart';
 import 'register.dart';
 import 'main.dart';
-
-class MatrixAnimation extends StatefulWidget {
-  const MatrixAnimation({super.key});
-
-  @override
-  State<MatrixAnimation> createState() => _MatrixAnimationState();
-}
-
-class _MatrixAnimationState extends State<MatrixAnimation>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  List<MatrixChar> matrixChars = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 3),
-    )..repeat();
-
-    for (int i = 0; i < 50; i++) {
-      matrixChars.add(MatrixChar());
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox.expand(
-      child: AnimatedBuilder(
-        animation: _controller,
-        builder: (context, child) {
-          return CustomPaint(
-            painter: MatrixPainter(
-              matrixChars: matrixChars,
-              animationValue: _controller.value,
-            ),
-            child: Container(),
-          );
-        },
-      ),
-    );
-  }
-}
-
-
-class MatrixChar {
-  double x;
-  double y;
-  double speed;
-  String char;
-
-  MatrixChar()
-      : x = 0,
-        y = Random().nextDouble() * -200,
-        speed = Random().nextDouble() * 5 + 2,
-        char = _randomMatrixChar();
-
-  static String _randomMatrixChar() {
-    const matrixChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#%^&*()';
-    return matrixChars[Random().nextInt(matrixChars.length)];
-  }
-}
-
-class MatrixPainter extends CustomPainter {
-  final List<MatrixChar> matrixChars;
-  final double animationValue;
-
-  MatrixPainter({required this.matrixChars, required this.animationValue});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    for (var char in matrixChars) {
-
-      if (char.x == 0) {
-        char.x = Random().nextDouble() * size.width;
-      }
-
-      char.y += char.speed * 2;
-
-      if (char.y > size.height) {
-        char.y = -20;
-        char.x = Random().nextDouble() * size.width;
-        char.char = MatrixChar._randomMatrixChar();
-      }
-
-      final textSpan = TextSpan(
-        text: char.char,
-        style: const TextStyle(
-          fontSize: 16,
-          color: Colors.green,
-          fontFamily: 'Courier',
-        ),
-      );
-      final textPainter = TextPainter(
-        text: textSpan,
-        textDirection: TextDirection.ltr,
-      );
-      textPainter.layout();
-      textPainter.paint(canvas, Offset(char.x, char.y));
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
-}
+import 'matrix_animation.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -172,6 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     const Text(
                       'Chosen One List',
                       style: TextStyle(
+                        fontFamily: 'Courier',
                         fontSize: 36,
                         fontWeight: FontWeight.bold,
                         color: Colors.green,
@@ -199,9 +88,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       child: TextFormField(
                         controller: _usernameController,
+                        style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           labelText: 'Correo electrónico',
                           hintText: 'ejemplo@correo.com',
+                          labelStyle: const TextStyle(color: Colors.white70),
+                          hintStyle: const TextStyle(color: Colors.white54),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide.none,
@@ -235,9 +127,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       child: TextFormField(
                         controller: _passwordController,
+                        style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           labelText: 'Contraseña',
                           hintText: 'Mínimo 8 caracteres',
+                          labelStyle: const TextStyle(color: Colors.white70),
+                          hintStyle: const TextStyle(color: Colors.white54),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide.none,
@@ -262,7 +157,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: _login,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.black,
-                        foregroundColor: Colors.black12,
+                        foregroundColor: Colors.green,
                         padding: const EdgeInsets.symmetric(
                             horizontal: 50, vertical: 15),
                         shape: RoundedRectangleBorder(
@@ -273,8 +168,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: const Text(
                         'Iniciar Sesión',
                         style: TextStyle(
+                          fontFamily: 'Courier',
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
+                          color: Colors.green,
                         ),
                       ),
                     ),
@@ -290,6 +187,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: const Text(
                         '¿No tienes cuenta? Regístrate',
                         style: TextStyle(
+                          fontFamily: 'Courier',
                           color: Colors.green,
                           fontSize: 14,
                           shadows: [
