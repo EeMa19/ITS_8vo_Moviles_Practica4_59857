@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'api_service.dart';
-import 'auth_screens.dart';
+import 'login.dart';
+import 'register.dart';
+
 
 void main() async {
   await dotenv.load(fileName: ".env"); // Cargar variables de entorno
@@ -18,12 +20,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      initialRoute: '/auth',
-      routes: {
-        '/auth': (context) => const AuthScreens(),
-        '/home': (context) => const MyHomePage(title: 'ToDo List'),
-      },
-
+      home: const LoginScreen(),
     );
   }
 }
